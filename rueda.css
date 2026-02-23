@@ -1,0 +1,978 @@
+/* ============================================
+   🎰 RUEDA DE LA FORTUNA - EL AREPERO
+   Juego interactivo con premios
+   ============================================ */
+
+/* ===== BOTÓN PRINCIPAL EN LA PÁGINA ===== */
+.juego-section {
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.juego-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255, 209, 102, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 100%, rgba(197, 58, 32, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+    animation: bgShift 10s ease-in-out infinite alternate;
+}
+
+@keyframes bgShift {
+    0% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+/* Estrellas flotantes de fondo */
+.juego-section::after {
+    content: '✨🎰🎁✨🎲🥙✨🎪🎊';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    opacity: 0.05;
+    pointer-events: none;
+    letter-spacing: 60px;
+    word-spacing: 100px;
+}
+
+.juego-container {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+.juego-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #FF6B35, #FFD166);
+    color: #1a0a2e;
+    padding: 10px 25px;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: badgePulse 2s ease-in-out infinite;
+    box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 107, 53, 0.5); }
+}
+
+.juego-title {
+    font-family: 'Playfair Display', serif;
+    color: #FFD166;
+    font-size: 2.8rem;
+    margin-bottom: 15px;
+    text-shadow: 0 0 30px rgba(255, 209, 102, 0.3);
+    line-height: 1.2;
+}
+
+.juego-subtitle {
+    color: rgba(255,255,255,0.85);
+    font-size: 1.15rem;
+    margin-bottom: 15px;
+    line-height: 1.6;
+}
+
+.juego-premios-preview {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.premio-chip {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.3s;
+}
+
+.premio-chip:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+.btn-jugar {
+    background: linear-gradient(135deg, #FF6B35 0%, #e74c3c 50%, #FF6B35 100%);
+    background-size: 200% auto;
+    color: white;
+    border: none;
+    padding: 22px 60px;
+    border-radius: 60px;
+    font-size: 1.4rem;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 15px 40px rgba(255, 107, 53, 0.5), 0 0 60px rgba(255, 107, 53, 0.2);
+    transition: all 0.4s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+    animation: btnGradient 3s ease-in-out infinite;
+}
+
+@keyframes btnGradient {
+    0% { background-position: 0% center; }
+    50% { background-position: 100% center; }
+    100% { background-position: 0% center; }
+}
+
+.btn-jugar:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 60px rgba(255, 107, 53, 0.6), 0 0 80px rgba(255, 107, 53, 0.3);
+}
+
+.btn-jugar:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.btn-jugar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.btn-jugar i {
+    font-size: 1.6rem;
+    animation: spinIcon 3s linear infinite;
+}
+
+@keyframes spinIcon {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== MODAL DEL JUEGO ===== */
+.rueda-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 5, 20, 0.97);
+    backdrop-filter: blur(15px);
+    z-index: 99999;
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    overflow-y: auto;
+}
+
+.rueda-modal-overlay.active {
+    display: block !important;
+    opacity: 1 !important;
+}
+
+.rueda-modal-content {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+    position: relative;
+    padding-bottom: 60px;
+}
+
+.rueda-close-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 209, 102, 0.9);
+    border: none;
+    border-radius: 50%;
+    color: #1a0a2e;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 25px rgba(255, 209, 102, 0.4);
+    transition: all 0.3s;
+}
+
+.rueda-close-btn:hover {
+    transform: rotate(90deg) scale(1.1);
+    background: #C53A20;
+    color: white;
+}
+
+/* ===== HEADER DEL JUEGO ===== */
+.rueda-header {
+    background: linear-gradient(135deg, rgba(42, 92, 61, 0.95) 0%, rgba(30, 71, 46, 0.95) 100%);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: 20px 25px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+    border-bottom: 2px solid rgba(255, 209, 102, 0.3);
+}
+
+.rueda-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.rueda-logo-icon {
+    font-size: 2.2rem;
+    animation: logoSpin 4s ease-in-out infinite;
+}
+
+@keyframes logoSpin {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(10deg) scale(1.1); }
+}
+
+.rueda-logo-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    margin: 0;
+    color: #FFD166;
+}
+
+.rueda-logo-text span {
+    font-size: 0.75rem;
+    opacity: 0.8;
+    letter-spacing: 1px;
+}
+
+.rueda-progress {
+    text-align: right;
+}
+
+.rueda-progress-bar {
+    width: 120px;
+    height: 10px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.rueda-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD166, #FF6B35);
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(255, 209, 102, 0.5);
+}
+
+.rueda-progress-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #FFD166;
+}
+
+/* ===== CUERPO DEL JUEGO ===== */
+.rueda-body {
+    padding: 30px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ===== LA RUEDA DE LA FORTUNA ===== */
+.wheel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.wheel-title {
+    font-family: 'Playfair Display', serif;
+    color: #FFD166;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(255, 209, 102, 0.3);
+}
+
+.wheel-wrapper {
+    position: relative;
+    width: 340px;
+    height: 340px;
+    margin: 0 auto 30px;
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    font-size: 2.5rem;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.5));
+    animation: pointerBounce 1s ease-in-out infinite;
+}
+
+@keyframes pointerBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(5px); }
+}
+
+.wheel-canvas {
+    width: 340px;
+    height: 340px;
+    border-radius: 50%;
+    box-shadow: 
+        0 0 0 8px #FFD166,
+        0 0 0 12px #2A5C3D,
+        0 0 0 16px rgba(255, 209, 102, 0.3),
+        0 0 60px rgba(255, 209, 102, 0.2),
+        inset 0 0 30px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: filter 0.3s;
+}
+
+.wheel-canvas:hover {
+    filter: brightness(1.05);
+}
+
+.wheel-canvas.spinning {
+    cursor: not-allowed;
+}
+
+.wheel-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #FFD166, #D4AF37);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #1a0a2e;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    border: 3px solid white;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.btn-girar {
+    background: linear-gradient(135deg, #FFD166, #D4AF37);
+    color: #1a0a2e;
+    border: none;
+    padding: 18px 50px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 10px 35px rgba(255, 209, 102, 0.4);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-girar:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 45px rgba(255, 209, 102, 0.6);
+}
+
+.btn-girar:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-girar.unlocked {
+    animation: glowBtn 2s ease-in-out infinite;
+}
+
+@keyframes glowBtn {
+    0%, 100% { box-shadow: 0 10px 35px rgba(255, 209, 102, 0.4); }
+    50% { box-shadow: 0 10px 45px rgba(255, 209, 102, 0.7), 0 0 60px rgba(255, 209, 102, 0.3); }
+}
+
+.wheel-status {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    text-align: center;
+    font-style: italic;
+}
+
+.wheel-status i {
+    color: #FFD166;
+}
+
+/* ===== RESULTADO DE LA RUEDA ===== */
+.wheel-result {
+    display: none;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 209, 102, 0.3);
+    border-radius: 25px;
+    padding: 35px;
+    text-align: center;
+    margin-bottom: 30px;
+    animation: resultSlideIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.wheel-result.show {
+    display: block;
+}
+
+@keyframes resultSlideIn {
+    0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.result-emoji {
+    font-size: 4rem;
+    margin-bottom: 15px;
+    animation: resultBounce 0.5s ease;
+}
+
+@keyframes resultBounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+.result-title {
+    font-family: 'Playfair Display', serif;
+    color: #FFD166;
+    font-size: 1.6rem;
+    margin-bottom: 10px;
+}
+
+.result-desc {
+    color: rgba(255,255,255,0.8);
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.result-code {
+    background: linear-gradient(135deg, #2A5C3D 0%, #1E472E 100%);
+    color: #FFD166;
+    padding: 20px 30px;
+    border-radius: 15px;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    font-family: 'Courier New', monospace;
+    margin: 20px 0;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255, 209, 102, 0.3);
+}
+
+.result-code::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 209, 102, 0.1), transparent);
+    animation: codeShine 3s infinite;
+}
+
+@keyframes codeShine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+}
+
+.result-validity {
+    color: rgba(255,255,255,0.5);
+    font-size: 0.85rem;
+    margin: 10px 0;
+}
+
+.btn-reclamar {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white;
+    border: none;
+    padding: 18px 40px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-top: 15px;
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.3);
+    transition: all 0.3s;
+}
+
+.btn-reclamar:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(37, 211, 102, 0.5);
+}
+
+/* ===== MISIONES ===== */
+.misiones-title {
+    font-family: 'Playfair Display', serif;
+    color: #FFD166;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.misiones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.mision-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(15px);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 28px;
+    text-align: center;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+}
+
+.mision-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    border-radius: 20px 20px 0 0;
+}
+
+.mision-card.instagram::before {
+    background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045);
+}
+
+.mision-card.google::before {
+    background: linear-gradient(90deg, #4285f4, #34a853, #fbbc05, #ea4335);
+}
+
+.mision-card.share::before {
+    background: linear-gradient(90deg, #1DA1F2, #00acee);
+}
+
+.mision-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 209, 102, 0.3);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+}
+
+.mision-card.locked {
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.mision-card.completed {
+    border-color: #28A745;
+    background: rgba(40, 167, 69, 0.1);
+}
+
+.mision-card.completed::after {
+    content: '✅';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 1.5rem;
+}
+
+.mision-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    margin: 0 auto 15px;
+    color: white;
+    position: relative;
+}
+
+.mision-card.instagram .mision-icon {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    box-shadow: 0 8px 25px rgba(131, 58, 180, 0.4);
+}
+
+.mision-card.google .mision-icon {
+    background: linear-gradient(135deg, #4285f4, #34a853);
+    box-shadow: 0 8px 25px rgba(66, 133, 244, 0.4);
+}
+
+.mision-card.share .mision-icon {
+    background: linear-gradient(135deg, #1DA1F2, #0077b5);
+    box-shadow: 0 8px 25px rgba(29, 161, 242, 0.4);
+}
+
+.mision-nombre {
+    font-family: 'Playfair Display', serif;
+    color: #FFD166;
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+}
+
+.mision-desc {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+    line-height: 1.5;
+}
+
+.mision-reward {
+    color: #FFD166;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-mision {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: all 0.3s;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.btn-mision.instagram-btn {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d);
+}
+
+.btn-mision.google-btn {
+    background: linear-gradient(135deg, #4285f4, #34a853);
+}
+
+.btn-mision.share-btn {
+    background: linear-gradient(135deg, #1DA1F2, #0077b5);
+}
+
+.btn-mision:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
+
+.btn-mision:disabled {
+    background: rgba(255,255,255,0.1) !important;
+    color: rgba(255,255,255,0.4);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-verificar {
+    background: rgba(42, 92, 61, 0.8);
+    color: white;
+    border: 1px solid rgba(42, 92, 61, 0.5);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-verificar:hover {
+    background: #2A5C3D;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(42, 92, 61, 0.4);
+}
+
+/* ===== INSTRUCCIONES ===== */
+.instrucciones-rueda {
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.instrucciones-rueda h4 {
+    font-family: 'Playfair Display', serif;
+    color: #FFD166;
+    font-size: 1.2rem;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.instruccion-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.instruccion-item:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateX(5px);
+}
+
+.instruccion-num {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #FFD166, #D4AF37);
+    color: #1a0a2e;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.instruccion-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.instruccion-text strong {
+    color: #FFD166;
+}
+
+/* ===== TOAST NOTIFICATIONS ===== */
+.rueda-toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: rgba(20, 15, 35, 0.95);
+    backdrop-filter: blur(20px);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    z-index: 100001;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.rueda-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.rueda-toast.success {
+    border-color: rgba(40, 167, 69, 0.5);
+    background: rgba(40, 167, 69, 0.9);
+}
+
+.rueda-toast.error {
+    border-color: rgba(197, 58, 32, 0.5);
+    background: rgba(197, 58, 32, 0.9);
+}
+
+.rueda-toast.info {
+    border-color: rgba(255, 209, 102, 0.5);
+    background: rgba(30, 25, 50, 0.95);
+}
+
+/* ===== CONFETTI ===== */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    z-index: 100002;
+    animation: confettiFallDown 3s linear forwards;
+    pointer-events: none;
+}
+
+@keyframes confettiFallDown {
+    0% {
+        transform: translateY(-20vh) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(110vh) rotate(1080deg);
+        opacity: 0;
+    }
+}
+
+/* ===== PARTÍCULAS ===== */
+.particle {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100003;
+    animation: particleExplode 1s ease-out forwards;
+}
+
+@keyframes particleExplode {
+    0% {
+        transform: translate(0, 0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) scale(0);
+        opacity: 0;
+    }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .juego-title {
+        font-size: 2rem;
+    }
+    
+    .btn-jugar {
+        padding: 18px 40px;
+        font-size: 1.1rem;
+    }
+    
+    .wheel-wrapper {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .wheel-canvas {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .wheel-center {
+        width: 55px;
+        height: 55px;
+        font-size: 1.4rem;
+    }
+    
+    .misiones-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .juego-premios-preview {
+        gap: 8px;
+    }
+    
+    .premio-chip {
+        padding: 6px 12px;
+        font-size: 0.78rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .juego-section {
+        padding: 50px 15px;
+    }
+    
+    .juego-title {
+        font-size: 1.7rem;
+    }
+    
+    .wheel-wrapper {
+        width: 240px;
+        height: 240px;
+    }
+    
+    .wheel-canvas {
+        width: 240px;
+        height: 240px;
+    }
+    
+    .wheel-center {
+        width: 45px;
+        height: 45px;
+        font-size: 1.2rem;
+    }
+    
+    .btn-girar {
+        padding: 14px 35px;
+        font-size: 1rem;
+    }
+    
+    .result-code {
+        font-size: 1.3rem;
+        padding: 15px 20px;
+        letter-spacing: 2px;
+    }
+}
